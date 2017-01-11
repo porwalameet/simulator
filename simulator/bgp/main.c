@@ -1,4 +1,5 @@
 #include "stdio.h"
+#include "../common/log.h"
 #include "../common/parser.h"
 
 jsonData_t* parse (FILE *flog, char* configFile);
