@@ -82,6 +82,26 @@ jsonData_t* parse (FILE *flog, char* configFile) {
 				strcpy(jsonData->serverIP, s); 
 			} else if (jsoneq(buff, &tok[i], "protocol") == 0) {
 				jsonData->protocol = strtol(s, NULL,0); 
+			} else if (jsoneq(buff, &tok[i], "myAS") == 0) {
+				jsonData->myAS = strtol(s, NULL,0);
+			} else if (jsoneq(buff, &tok[i], "myRouterID") == 0) {
+				strcpy(jsonData->myRouterID, s); 
+			} else if (jsoneq(buff, &tok[i], "myKeepalive") == 0) {
+                                jsonData->myKeepalive = strtol(s, NULL,0);
+			} else if (jsoneq(buff, &tok[i], "myPassword") == 0) {
+                                strcpy(jsonData->myPassword, s);
+			} else if (jsoneq(buff, &tok[i], "myMaxPath") == 0) {
+                                jsonData->myMaxPath = strtol(s, NULL,0);
+			} else if (jsoneq(buff, &tok[i], "peerAS") == 0) {
+				jsonData->peerAS = strtol(s, NULL,0);
+			} else if (jsoneq(buff, &tok[i], "peerRouterID") == 0) {
+				strcpy(jsonData->peerRouterID, s); 
+			} else if (jsoneq(buff, &tok[i], "peerKeepalive") == 0) {
+                                jsonData->peerKeepalive = strtol(s, NULL,0);
+			} else if (jsoneq(buff, &tok[i], "peerPassword") == 0) {
+                                strcpy(jsonData->peerPassword, s);
+			} else if (jsoneq(buff, &tok[i], "peerMaxPath") == 0) {
+                                jsonData->peerMaxPath = strtol(s, NULL,0);
 			}
 			i++; 
 		}
