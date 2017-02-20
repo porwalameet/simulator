@@ -13,6 +13,11 @@ struct bgp_t {
 	struct sockaddr_in routerID;
 };
 #define BGP_MARKER_SIZE                 16      /* size of BGP marker */
+
+
+
+
+
 /* BGP message types */
 #define BGP_OPEN                1
 #define BGP_UPDATE              2
@@ -47,7 +52,7 @@ struct bgp_t *bgp = &bgpStruct;
 
 sendBgpData (FILE* fp, uchar *ptr, int length) {
     int sent;
-
+    log_debug(fp, "lenght is = %d", length);
     log_debug(fp, "BGP: SendData: Sending %d Bytes", length); fflush(stdout);
     sent = sendto(bgp->sock, ptr, length, 0,
             (struct sockaddr*)&bgp->server_addr, sizeof(bgp->server_addr));
@@ -112,11 +117,24 @@ initConnectionToPeer(FILE *fp) {
     fflush(fp);
 }
 
+
+sendKeepalive (FILE *fp) {
+        struct bgp_open open;
+
+        log_info(fp, "BGP: Send KEEPALIVE"); 
+        memset(open.bgpo_marker, 0xFF, 16);
+        open.bgpo_len = htons(19);
+        open.bgpo_type = BGP_KEEPALIVE;
+
+        sendBgpData(fp, (uchar*)&open, 19);
+}
+
+
 sendOpen(FILE *fp, int sock) {
   struct bgp_open open;
         int i;
 
-        log_info(fp, "BGP: Send OPEN"); fflush(stdout);
+        log_info(fp, "BGP: Send OPEN");
         memset(open.bgpo_marker, 0xFF, 16);
         open.bgpo_len = htons(29);
         open.bgpo_type = BGP_OPEN;
@@ -137,7 +155,7 @@ sendOpen(FILE *fp, int sock) {
 
 main() {
 	FILE *fp;
-        fp = fopen("/root/ameet/simulator/logs.txt", "a+");
+        fp = fopen("/root/ameet/simulator/logs.txt", "w");
 	if (fp == NULL)
 	{
 		printf ("could not open logfile\n");
@@ -147,6 +165,7 @@ main() {
 	jsonData = parse(fp, NULL);
 	initConnectionToPeer(fp);
 	sendOpen(fp, bgp->sock);
+	sendKeepalive(fp);
 	//cliLoop();
 }
 
